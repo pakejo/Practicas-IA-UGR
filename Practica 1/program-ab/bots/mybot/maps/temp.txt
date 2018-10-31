@@ -1,0 +1,16 @@
+pera:verde_amarillo mediano dulce no si si
+pinia:amarillo_verde grande acido no si si
+fresa:rojo pequenio semiacido no si si
+coco:marron grande neutro no si si
+aguacate:verde mediano neutro no si si
+melocoton:naranja_amarillo mediano semiacido si si no
+higo:verde_morado pequenio dulce no si si
+mandarina:naranja pequenio acido si no no
+manzana:amarillo_rojo_verde mediano semiacido no si si
+platano:amarillo mediano dulce no si si
+ciruela:amarillo_morado pequenio dulce si si si
+naranja:naranja mediano acido no si si
+kiwi:verde_amarillo pequenio acido no no si
+nuez:marron pequenio neutro no si no
+mango:verde grande semiacido si si si
+cereza:rojo pequenio semiacido si no si

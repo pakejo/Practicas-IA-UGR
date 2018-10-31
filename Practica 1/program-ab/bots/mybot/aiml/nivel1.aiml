@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="2.0">
+<category>
+	<pattern> * juego ^</pattern>
+	<template> A que jugamos? </template>
+</category>
+
+
+<!--Regla que elige una fruta aleatoriamente-->
+<category>
+	<pattern>^ piensa * fruta *</pattern>
+	<template>
+	<set name = "topic">humanoAdivina</set>
+	<set name="fruta_bot">
+	<random>
+			<li>Fresa</li>
+			<li>Manzana</li>
+			<li>Naranja</li>
+			<li>Kiwi</li>
+			<li>Mandarina</li>
+			<li>Piña</li>
+			<li>Mango</li>
+			<li>Melocoton</li>
+			<li>Higo</li>
+			<li>Ciruela</li>
+			<li>Pera</li>
+			<li>Platano</li>
+			<li>Coco</li>
+			<li>Aguacate</li>
+			<li>Nuez</li>
+			<li>Cereza</li>
+		</random>
+	</set>
+	Ya he pensando la fruta
+	</template>
+</category>
+
+
+<!--Contexto para el juego -->
+<topic name="humanoAdivina">
+
+<!--Regla para preguntar acerca del color-->
+<category>
+	<pattern>_ color *</pattern>
+	<template>
+	<think>
+		<set var="color"> <star index="2"/> </set>
+		<set var="descripcion"><map name="info"><get name="fruta_bot"/></map></set>
+		<set var="p">
+			<srai>TOP <get var="descripcion"/> </srai>
+		</set>
+		
+		<set var="coloresDesco">
+			<srai>DECODE <get var="p"/></srai>
+		</set>
+		
+		<set var="resultado">
+			<srai>FINDITEM <get var="color"/> IN <get var="coloresDesco"/></srai>
+		</set>
+	</think>
+
+	<condition var="resultado">
+		<li value="0">NO</li>
+		<li>SI</li>
+	</condition>
+
+	</template>
+</category>
+
+
+<!--Regla para preguntar acerca del sabor-->
+<category>
+	<pattern>* sabor *</pattern>
+	<template>
+	<think>
+		<set var="sabor"> <star index="2"/> </set>
+		<set var="descripcion"><map name="info"><get name="fruta_bot"/></map></set>
+
+		<set var="saborFruta">
+			<srai>FINDITEM <get var="sabor"/> IN <get var="descripcion"/></srai>
+		</set>
+	</think>
+
+	<condition var="saborFruta">
+		<li value="0">NO</li>
+		<li>SI</li>
+	</condition>
+
+	</template>
+</category>
+
+
+<!--Regla para preguntar acerca del tamaño-->
+<category>
+	<pattern>es *</pattern>
+	<template>
+	<think>
+		<set var="tamanio"> <star index="1"/> </set>
+		<set var="descripcion"><map name="info"><get name="fruta_bot"/></map></set>
+
+		<set var="tamanioFruta">
+			<srai>FINDITEM <get var="tamanio"/> IN <get var="descripcion"/></srai>
+		</set>
+	</think>
+
+	<condition var="tamanioFruta">
+		<li value="0">NO</li>
+		<li>SI</li>
+	</condition>	
+
+	</template>
+</category>
+
+
+<!--Regla para preguntar acerca de la vitamina A-->
+<category>
+	<pattern>tiene vitamina A</pattern>
+	<template>
+	<think>
+		<set var="descripcion"><map name="info"><get name="fruta_bot"/></map></set>
+	</think>
+
+	<set var="vitA">
+		<srai>SELECTITEM 4 IN <get var="descripcion"/> </srai>
+	</set>
+
+	</template>
+</category>
+
+
+<!--Regla para preguntar acerca de la vitamina B-->
+<category>
+	<pattern>tiene vitamina B</pattern>
+	<template>
+	<think>
+		<set var="descripcion"><map name="info"><get name="fruta_bot"/></map></set>
+	</think>
+
+	<set var="vitB">
+		<srai>SELECTITEM 5 IN <get var="descripcion"/> </srai>
+	</set>
+
+	</template>
+</category>
+
+
+<!--Regla para preguntar acerca de la vitamina C-->
+<category>
+	<pattern>tiene vitamina C</pattern>
+	<template>
+	<think>
+		<set var="descripcion"><map name="info"><get name="fruta_bot"/></map></set>
+	</think>
+
+	<set var="vitC">
+		<srai>SELECTITEM 6 IN <get var="descripcion"/> </srai>
+	</set>
+
+	</template>
+</category>
+
+
+<!--Regla para saber si se ha adivinado la fruta-->
+<category>
+	<pattern>La fruta en la que estabas pensando es *</pattern>
+	<template>
+	<think>
+		<set var="fruta"> <srai>REMAIN <star index="1"/></srai></set>
+	</think>
+
+	<condition var="fruta">
+		<li><value><get name="fruta_bot"/></value>Pues si lo es</li>
+		<li>Pues va ser que no</li>
+	</condition>
+
+	</template>
+</category>
+
+<category>
+	<pattern>Tu fruta es *</pattern>
+	<template>
+		<srai>La fruta en la que estabas pensando es <star index="1"/></srai>
+	</template>
+</category>
+
+</topic>
+
+</aiml>

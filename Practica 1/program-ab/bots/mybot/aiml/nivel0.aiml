@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="2.0">
+
+<!--regla 1-->
+<category>
+  <pattern>* practica</pattern>
+  <template>Pues estudiando claro</template>
+</category>
+
+<!--regla 2-->
+<category>
+  <pattern>como * convocatoria ordinaria</pattern>
+  <template>
+    La nota de teoria sera la media de dos pruebas 
+    y la de practicas la defensa y el examen de ejercicios
+  </template>
+</category>
+
+<!--regla 3-->
+<category>
+  <pattern>^ examen * practicas *</pattern>
+  <template>Claro que si</template>
+</category>
+
+<!--regla 4-->
+<category>
+  <pattern>* asistir * regularmente</pattern>
+  <template>Con 3 faltas de asistnecia a practicas te suspende</template>
+</category>
+
+<!--regla 5-->
+<category>
+  <pattern>^ nota ^ aprobar</pattern>
+  <template>Si, un 3</template>
+</category>
+
+<!--regla 6-->
+<category>
+  <pattern>^ practicas *</pattern>
+  <template>Claro que son obligatorias</template>
+</category>
+
+<!--regla 7-->
+<category>
+  <pattern>* practica * nota final</pattern>
+  <template>Pues si mal no me acuerdo cada practica era el 25% de la nota</template>
+</category>
+
+<!--regla 8-->
+<category>
+  <pattern>* participacion * nota final</pattern>
+  <template>Pues un punto mas</template>
+</category>
+
+<!--regla 9-->
+<category>
+  <pattern>* participacion</pattern>
+  <template>Pues puedes salir a hacer ejercicios a la pizarra</template>
+</category>
+
+<!--regla 10-->
+<category>
+  <pattern>^ trabajos * individuales</pattern>
+  <template>Si, todos</template>
+</category>
+
+<!--regla 11-->
+<category>
+  <pattern>* trabajos ^ grupo</pattern>
+  <template>No, son individuales</template>
+</category>
+
+<!--regla 12-->
+<category>
+  <pattern>* entregar * relacion de problemas</pattern>
+  <template>Si tienes que entregarlos</template>
+</category>
+
+<!--regla 13-->
+<category>
+  <pattern>cuanto * examen de teoria</pattern>
+  <template>Vale 2 puntos de la nota</template>
+</category>
+
+<!--regla 14-->
+<category>
+  <pattern>* recuperar * practica *</pattern>
+  <template>Por supuesto</template>
+</category>
+
+<!--regla 15-->
+<category>
+  <pattern>* si me copio *</pattern>
+  <template>Que como te pillen vas a julio de cabeza</template>
+</category>
+
+<!--regla 16-->
+<category>
+  <pattern>* si me dejo copiar *</pattern>
+  <template><srai>* si me copio *</srai></template>
+</category>
+
+<!--regla 17-->
+<category>
+  <pattern>* suspendo * convocatoria ordinaria</pattern>
+  <template>Tienes que ir a recuperacion donde haras un examen sobre 10 puntos</template>
+</category>
+
+<!--regla 18-->
+<category>
+  <pattern>Cuanto * practica * teoria</pattern>
+  <template>La mitad cada una</template>
+</category>
+
+<!--regla 19-->
+<category>
+  <pattern>* horario * practicas</pattern>
+  <template>Los miercoles de 17:30 a 18:30 y los jueves de 9:00 a 13:00 y de 16:30 a 17:30</template>
+</category>
+
+<!--regla 20-->
+<category>
+  <pattern>* practica * presento * practica</pattern>
+  <template>Por poder se puede pero mas te vale hacer bien el resto sino chungo</template>
+</category>
+
+<!--regla 21-->
+<category>
+  <pattern>* nota minima * media</pattern>
+  <template>Necesitarias un 3 como minimo</template>
+</category>
+
+<!--regla 22-->
+<category>
+  <pattern>^ puntuacion * practica 1 * nivel 3 *</pattern>
+  <template>Un 6</template>
+</category>
+
+<!--regla 23-->
+<category>
+  <pattern>* practica * sin * nivel 0</pattern>
+  <template>No puedes</template>
+</category>
+
+<!--regla 24-->
+<category>
+  <pattern>_ asistir _ defensa ^ practica ^</pattern>
+  <template>Tendrias que avisar al profesor de antemano para cambiar la hora</template>
+</category>
+
+<!--regla 25-->
+<category>
+  <pattern>^ pruebas * curso</pattern>
+  <template>Solamente dos pruebas</template>
+</category>
+
+<!--regla 26-->
+<category>
+  <pattern>* prueba teorica</pattern>
+  <template><srai>cuanto * examen de teoria</srai></template>
+</category>
+
+<!--regla 27-->
+<category>
+  <pattern> * examen de ejercicios</pattern>
+  <template>Son una serie de ejercicios basados en los realizados en clase</template>
+</category>
+
+<!--regla 28-->
+<category>
+  <pattern>* seguro * nivel 3 *</pattern>
+  <template>Pues haz el nivel dos que es mas facil</template>
+</category>
+
+<!--regla 29-->
+<category>
+  <pattern>^ programo * practica *</pattern>
+  <template>Muy bien por ti, pero esto es en AIML</template>
+</category>
+
+<!--regla 30-->
+<category>
+  <pattern>_ agentes conversacionales _ agente conversacional _ practicas</pattern>
+  <template>No vale pedirselo a Siri</template>
+</category>
+
+</aiml>

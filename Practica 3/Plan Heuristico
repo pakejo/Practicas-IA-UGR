@@ -1,0 +1,8 @@
+Primero ver si puedo meter una para turno extra
+Luego comprobar si puedo dar la vuelta
+	Si doy la vuelta comprobar si cae en vacia
+		Cae en vacia mover
+		NO cae comprobar si cae en una que pueda marcar extra
+Si no da vuelta
+	comprobar si cae en una del otro para evitar turno extra
+	comprobar si tiene libre para joder robo

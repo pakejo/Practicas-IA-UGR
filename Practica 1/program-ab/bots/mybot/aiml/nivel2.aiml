@@ -1,0 +1,630 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="2.0">
+
+<!--Regla para eleccion modo de juego -->
+<category>
+	<pattern> * juego ^</pattern>
+	<template> A que jugamos? </template>
+</category>
+
+
+<!--Reglas para prguntar sobre el color-->
+<category>
+	<pattern>^ pienso * fruta *</pattern>
+	<template>
+		<think>
+		<set name="topic">botAdivina</set>
+		<srai>INICIALIZA</srai>
+		</think>
+		<srai>ENLACE COLOR</srai>
+	</template>
+</category>
+
+<!--Contexto para el juego -->
+<topic name="botAdivina">
+
+<category>
+	<pattern>ENLACE COLOR</pattern>
+	<template>
+		<think>
+		<set var="tmp"><readset>tempcolores</readset></set>
+		<set var="elegido"><first><get var="tmp"/></first></set>
+		<set var="tmp"><rest><get var="tmp"/></rest></set>
+
+		<set name="color"><get var="elegido"/></set>
+		</think>
+		Es de color <get name="color"/> ?
+	</template>
+</category>
+
+
+
+<category>
+	<pattern>si</pattern>
+	<that>ES DE COLOR *</that>
+	<template>
+		<think>
+		<set var="valores"><readset>tempcolores</readset></set>
+		<set var="tmp"><first><get var="valores"/></first></set>
+		<set var="valores"><rest><get var="valores"/></rest></set>
+		<!--Guarda las frutas que no tengan ese color -->
+		<condition var="tmp">
+			<li value="NIL"></li>
+			<li><value><get name="color"/></value>
+				<set var="tmp"><first><get var="valores"/></first></set>
+				<set var="valores"><rest><get var="valores"/></rest></set>
+				<loop/>
+			</li>
+			<li>
+				<srai>BORRAFRUTASCOLOR <get var="tmp"/></srai>
+				<set var="tmp"><first><get var="valores"/></first></set>
+				<set var="valores"><rest><get var="valores"/></rest></set>
+				<loop/>
+			</li>
+		</condition>
+		</think>	
+		<srai>ENLACE TAMANIO</srai>
+	</template>
+</category>
+
+
+<category>
+	<pattern>no</pattern>
+	<that>ES DE COLOR *</that>
+	<template>
+		<think><srai>BORRAFRUTASCOLOR <get name="color"/></srai></think>
+
+		<removefromset>
+		<name>tempcolores</name>
+		<key><get name="color"/></key>
+		</removefromset>
+
+		<srai>ENLACE COLOR</srai>
+
+	</template>
+</category>
+
+
+<!--Regla para el tamaño-->
+<category>
+	<pattern>ENLACE TAMANIO</pattern>
+	<template>
+		<think>
+		<set var="tmp"><readset>temptamanios</readset></set>
+		<set var="elegido"><first><get var="tmp"/></first></set>
+		<set var="tmp"><rest><get var="tmp"/></rest></set>
+
+		<set name="tamanio"><get var="elegido"/></set>
+		</think>
+		Es de tamanio <get name="tamanio"/> ?
+	</template>
+</category>
+
+<category>
+	<pattern>si</pattern>
+	<that>ES DE TAMANIO *</that>
+	<template>
+		<think>
+		<set var="tamanios"><readset>tamanios</readset></set>
+		<set var="tmp"><first><get var="tamanios"/></first></set>
+		<set var="tamanios"><rest><get var="tamanios"/></rest></set>
+
+		<condition var="tmp">
+			<li value="NIL"></li>
+			<li><value><get name="tamanio"/></value>
+				<set var="tmp"><first><get var="tamanios"/></first></set>
+				<set var="tamanios"><rest><get var="tamanios"/></rest></set>
+				<loop/>
+			</li>
+			<li>
+				<srai>BORRATAMANIOSABOR <get var="tmp"/></srai>
+				<set var="tmp"><first><get var="tamanios"/></first></set>
+				<set var="tamanios"><rest><get var="tamanios"/></rest></set>
+				<loop/>
+			</li>
+		</condition>
+		</think>
+		<srai>ENLACE SABOR</srai>
+	</template>
+</category>
+
+<category>
+	<pattern>no</pattern>
+	<that>ES DE TAMANIO *</that>
+	<template>
+		<think><srai>BORRATAMANIOSABOR <get name="tamanio"/></srai></think>
+
+		<removefromset>
+		<name>temptamanios</name>
+		<key><get name="tamanio"/></key>
+		</removefromset>
+
+		<srai>ENLACE TAMANIO</srai>
+	</template>
+</category>
+
+
+<!--Regla para el sabor-->
+<category>
+	<pattern>ENLACE SABOR</pattern>
+	<template>
+		<think>
+		<set var="tmp"><readset>tempsabores</readset></set>
+		<set var="elegido"><first><get var="tmp"/></first></set>
+		<set var="tmp"><rest><get var="tmp"/></rest></set>
+
+		<set name="sabor"><get var="elegido"/></set>
+		</think>
+		Tiene sabor <get name="sabor"/> ?
+	</template>
+</category>
+
+
+<category>
+	<pattern>si</pattern>
+	<that>TIENE SABOR *</that>
+	<template>
+		<think>
+		<set var="sabores"><readset>sabores</readset></set>
+		<set var="tmp"><first><get var="sabores"/></first></set>
+		<set var="sabores"><rest><get var="sabores"/></rest></set>
+
+		<condition var="tmp">
+			<li value="NIL"></li>
+			<li><value><get name="sabor"/></value>
+				<set var="tmp"><first><get var="sabores"/></first></set>
+				<set var="sabores"><rest><get var="sabores"/></rest></set>
+				<loop/>
+			</li>
+			<li>
+				<srai>BORRATAMANIOSABOR <get var="tmp"/></srai>
+				<set var="tmp"><first><get var="sabores"/></first></set>
+				<set var="sabores"><rest><get var="sabores"/></rest></set>
+				<loop/>
+			</li>
+		</condition>
+		</think>
+
+		<srai>ENLACE VITA</srai>
+	</template>
+</category>
+
+<!--Fallo-->
+<category>
+	<pattern>no</pattern>
+	<that>TIENE SABOR *</that>
+	<template>
+		<think><srai>BORRATAMANIOSABOR <get name="sabor"/></srai></think>
+		
+		<removefromset>
+		<name>tempsabores</name>
+		<key><get name="sabor"/></key>
+		</removefromset>
+
+		<srai>ENLACE SABOR</srai>
+	</template>
+</category>
+
+
+<!--Regla para la vitamina A-->
+<category>
+	<pattern>ENLACE VITA</pattern>
+	<template>Tiene vitamina A?</template>
+</category>
+
+<category>
+	<pattern>si</pattern>
+	<that>TIENE VITAMINA A ^</that>
+	<template>
+		<think>
+		<srai>BORRAVITAMINADEPOS 4 SI no</srai>
+		<srai>ENLACE VITB</srai>
+		</think>
+	</template>
+</category>
+
+<category>
+	<pattern>no</pattern>
+	<that>TIENE VITAMINA A ^</that>
+	<template>
+		<think><srai>BORRAVITAMINADEPOS 4 SI si</srai></think>
+		<srai>ENLACE VITB</srai>
+	</template>
+</category>
+
+
+<!--Regla para la vitamina B-->
+<category>
+	<pattern>ENLACE VITB</pattern>
+	<template>Tiene vitamina B?</template>
+</category>
+
+<category>
+	<pattern>si</pattern>
+	<that>TIENE VITAMINA B ^</that>
+	<template>
+		<think><srai>BORRAVITAMINADEPOS 5 SI no</srai></think>
+		<srai>ENLACE VITC</srai>
+	</template>
+</category>
+
+<category>
+	<pattern>no</pattern>
+	<that>TIENE VITAMINA B ^</that>
+	<template>
+		<think><srai>BORRAVITAMINADEPOS 5 SI si</srai></think>
+		<srai>ENLACE VITC</srai>
+	</template>
+</category>
+
+
+<!--Regla para la vitamina C-->
+<category>
+	<pattern>ENLACE VITC</pattern>
+	<template>Tiene vitamina C?</template>
+</category>
+
+<category>
+	<pattern>si</pattern>
+	<that>TIENE VITAMINA C ^</that>
+	<template>
+		<think><srai>BORRAVITAMINADEPOS 6 SI no</srai></think>
+		<srai>ENLACE FINAL</srai>
+	</template>
+</category>
+
+<category>
+	<pattern>no</pattern>
+	<that>TIENE VITAMINA C ^</that>
+	<template>
+		<think><srai>BORRAVITAMINADEPOS 6 SI si</srai></think>
+		<srai>ENLACE FINAL</srai>
+	</template>
+</category>
+
+<!--Regla Final-->
+<category>
+	<pattern>ENLACE FINAL</pattern>
+	<template>
+		<think><set var="fruta"><readkeys>temp</readkeys></set></think>
+		Tu fruta es <get var="fruta"/>
+		<think><srai>LIMPIA</srai></think>
+	</template>
+</category>
+
+
+<!--################## Reglas Auxiliares ##################-->
+
+<!--Regla usada al principio para iniializar archivos temporales-->
+<category>
+	<pattern>INICIALIZA</pattern>
+	<template>
+		<!--Copia los valores de colores a tempcolores-->
+		<set var="colores"><readset>colores</readset></set>
+		<set var="tmp"><first><get var="colores"/></first></set>
+		<set var="colores"><rest><get var="colores"/></rest></set>
+
+		<condition var="tmp">
+			<li value="NIL"></li>
+			<li>
+				<addtoset>
+				<name>tempcolores</name>
+				<key><get var="tmp"/></key>
+				</addtoset>
+
+				<set var="tmp"><first><get var="colores"/></first></set>
+				<set var="colores"><rest><get var="colores"/></rest></set>
+				<loop/>
+			</li>
+		</condition>
+
+		<!--Copia los valores de tamanios a temptamanios-->
+		<set var="tamanios"><readset>tamanios</readset></set>
+		<set var="tmp2"><first><get var="tamanios"/></first></set>
+		<set var="tamanios"><rest><get var="tamanios"/></rest></set>
+
+		<condition var="tmp2">
+			<li value="NIL"></li>
+			<li>
+				<addtoset>
+				<name>temptamanios</name>
+				<key><get var="tmp2"/></key>
+				</addtoset>
+
+				<set var="tmp2"><first><get var="tamanios"/></first></set>
+				<set var="tamanios"><rest><get var="tamanios"/></rest></set>
+				<loop/>
+			</li>
+		</condition>
+
+		<!--Copia los valores de sabores a tempsabores-->
+		<set var="sabores"><readset>sabores</readset></set>
+		<set var="tmp3"><first><get var="sabores"/></first></set>
+		<set var="sabores"><rest><get var="sabores"/></rest></set>
+
+		<condition var="tmp3">
+			<li value="NIL"></li>
+			<li>
+				<addtoset>
+				<name>tempsabores</name>
+				<key><get var="tmp3"/></key>
+				</addtoset>
+
+				<set var="tmp3"><first><get var="sabores"/></first></set>
+				<set var="sabores"><rest><get var="sabores"/></rest></set>
+				<loop/>
+			</li>
+		</condition>
+
+		<!--Copia frutas al archivo temp-->
+		<set var="frutas"><readkeys>info</readkeys></set>
+		<set var="tmp4"><first><get var="frutas"/></first></set>
+		<set var="descripcion"><map name="info"><get var="tmp4"/></map></set>
+		<set var="frutas"><rest><get var="frutas"/></rest></set>
+
+		<condition var="tmp4">
+			<li value="NIL"></li>
+			<li>
+				<addtomap>
+				<name>temp</name>
+				<key><get var="tmp4"/></key>
+				<value><get var="descripcion"/></value>
+				</addtomap>
+			
+				<set var="tmp4"><first><get var="frutas"/></first></set>
+				<set var="descripcion"><map name="info"><get var="tmp4"/></map></set>
+				<set var="frutas"><rest><get var="frutas"/></rest></set>
+				<loop/>
+			</li>
+		</condition>
+
+	</template>
+</category>
+
+
+<!--Regla que guarda frutas segun el color en temp-->
+<category>
+	<pattern>GUARDAFRUTASCOLOR ^</pattern>
+	<template>
+		<!--Saca primera fruta del set-->
+		<set var="valores"><readset>frutas</readset></set>
+		<set var="tmp"><first><get var="valores"/></first></set>
+		<set var="valores"><rest><get var="valores"/></rest></set>
+		<!--Comprueba si esa fruta tiene el color-->
+		<condition var="tmp">
+			<li value="NIL"></li>
+			<li>
+				<set var="descripcion"><map name="info"><get var="tmp"/></map></set>
+				<set var="color">
+					<srai>TOP <get var="descripcion"/> </srai>
+				</set>
+				<set var="coloresDesco">
+					<srai>DECODE <get var="color"/></srai>
+				</set>
+				<set var="resultado">
+					<srai>FINDITEM <star/> IN <get var="coloresDesco"/></srai>
+				</set>
+				<!--Si lo tiene añade la fruta a temp.txt-->
+				<condition var="resultado">
+					<li value="0"></li>
+					<li>
+						<addtomap>
+						<name>temp</name>
+						<key><get var="tmp"/></key>
+						<value><map name="info"><get var="tmp"/></map></value>
+						</addtomap>
+					</li>
+				</condition>
+				<!--Cogemos otra fruta-->
+				<set var="tmp"><first><get var="valores"/></first></set>
+				<set var="valores"><rest><get var="valores"/></rest></set>
+				<loop/>
+			</li>
+		</condition>
+	</template>
+</category>
+
+
+<!--Regla que elimina frutas segun el color.
+	Usada a la hora de guardar los colores para
+	casos de multiples colores-->
+<category>
+	<pattern>BORRAFRUTASCOLOR ^</pattern>
+	<template>
+		<set var="valores"><readset>frutas</readset></set>
+		<set var="tmp"><first><get var="valores"/></first></set>
+		<set var="valores"><rest><get var="valores"/></rest></set>
+		<set var="aux"><star/></set>
+
+		<condition var="tmp">
+			<li value="NIL"></li>
+			<li>
+				<set var="descripcion"><map name="info"><get var="tmp"/></map></set>
+				<set var="tmp2">
+					<srai>TOP <get var="descripcion"/> </srai>
+				</set>
+				
+				<set var="coloresDesco">
+					<srai>DECODE <get var="tmp2"/></srai>
+				</set>
+				
+				<set var="resultado">
+					<srai>FINDITEM <get var="aux"/> IN <get var="coloresDesco"/></srai>
+				</set>
+
+				<condition var="resultado">
+					<li value="0"></li>
+					<li>
+						<removefrommap>
+						<name>temp</name>
+						<key><get var="tmp"/></key>
+						</removefrommap>
+					</li>
+				</condition>
+
+				<set var="tmp"><first><get var="valores"/></first></set>
+				<set var="valores"><rest><get var="valores"/></rest></set>
+				<loop/>		
+			</li>
+		</condition>
+	</template>
+</category>
+
+
+<!--Regla que borra las frutas de temp a partir de su
+	tamaño o sabor. Recibe como parametro el tamaño o sabor
+	que contiene las frutas a borrar -->
+<category>
+	<pattern>BORRATAMANIOSABOR ^</pattern>
+	<template>
+		<set var="valores"><readset>frutas</readset></set>
+		<set var="tmp"><first><get var="valores"/></first></set>
+		<set var="valores"><rest><get var="valores"/></rest></set>
+		<set var="aux"><star/></set>
+
+		<condition var="tmp">
+			<li value="NIL"></li>
+			<li>
+				<set var="descripcion"><map name="info"><get var="tmp"/></map></set>
+
+				<set var="resultado">
+					<srai>FINDITEM <get var="aux"/> IN <get var="descripcion"/></srai>
+				</set>
+
+				<condition var="resultado">
+					<li value="0"></li>
+					<li>
+						<removefrommap>
+						<name>temp</name>
+						<key><get var="tmp"/></key>
+						</removefrommap>
+					</li>
+				</condition>
+
+				<set var="tmp"><first><get var="valores"/></first></set>
+				<set var="valores"><rest><get var="valores"/></rest></set>
+				<loop/>		
+			</li>
+		</condition>
+	</template>
+</category>
+
+
+<!--Regla que borra las frutas de tmp segun la vitamina.
+	Para ello, se le pasa el numero de posicion de la vitamina
+	y si o no segun si la fruta tiene o no esa vitamina-->
+<category>
+	<pattern>BORRAVITAMINADEPOS <set>number</set> SI *</pattern>
+	<template>
+		<set var="valores"><readkeys>temp</readkeys></set>
+		<set var="primera"><first><get var="valores"/></first></set>
+		<set var="valores"><rest><get var="valores"/></rest></set>
+
+		<condition var="primera">
+			<li value="NIL"></li>
+			<li>
+				<set var="descripcion"><map name="info"><get var="primera"/></map></set>
+				<set var="posicion">
+					<srai>SELECTITEM <star/> IN <get var="descripcion"/></srai>
+				</set>
+
+				<set var="contiene">
+					<srai>COMPARE <get var="posicion"/> WITH <star index="2"/></srai>
+				</set>
+				
+				<condition var="contiene">
+					<li value="NO"></li>
+					<li value="YES">
+						<removefrommap>
+						<name>temp</name>
+						<key><get var="primera"/></key>
+						</removefrommap>
+					</li>
+				</condition>
+
+				<set var="primera"><first><get var="valores"/></first></set>
+				<set var="valores"><rest><get var="valores"/></rest></set>
+				<loop/>			
+			</li>
+		</condition>
+
+	</template>
+</category>
+
+
+<!--Regla usada al final del programa para limpiar los archivos temporales-->
+<category>
+	<pattern>LIMPIA</pattern>
+	<template>
+		<!--Borra Archivo Temp con la fruta acertada-->
+		<set var="tmp"><readkeys>temp</readkeys></set>
+		<removefrommap>
+		<name>temp</name>
+		<key><get var="tmp"/></key>
+		</removefrommap>
+
+		<!--Borra Archivo tempcolores-->
+		<set var="colores"><readset>tempcolores</readset></set>
+		<set var="tmp2"><first><get var="colores"/></first></set>
+		<set var="colores"><rest><get var="colores"/></rest></set>
+
+		<condition var="tmp2">
+			<li value="NIL"></li>
+			<li>
+				<removefromset>
+				<name>tempcolores</name>
+				<key><get var="tmp2"/></key>
+				</removefromset>
+
+				<set var="tmp2"><first><get var="colores"/></first></set>
+				<set var="colores"><rest><get var="colores"/></rest></set>	
+				<loop/>			
+			</li>
+		</condition>
+
+
+		<!--Borra Archivo temptamanios-->
+		<set var="tamanios"><readset>temptamanios</readset></set>
+		<set var="tmp3"><first><get var="tamanios"/></first></set>
+		<set var="tamanios"><rest><get var="tamanios"/></rest></set>
+
+		<condition var="tmp3">
+			<li value="NIL"></li>
+			<li>
+				<removefromset>
+				<name>temptamanios</name>
+				<key><get var="tmp3"/></key>
+				</removefromset>
+
+				<set var="tmp3"><first><get var="tamanios"/></first></set>
+				<set var="tamanios"><rest><get var="tamanios"/></rest></set>	
+				<loop/>			
+			</li>
+		</condition>
+
+
+		<!--Borra Archivo tempsabores-->
+		<set var="sabores"><readset>tempsabores</readset></set>
+		<set var="tmp4"><first><get var="sabores"/></first></set>
+		<set var="sabores"><rest><get var="sabores"/></rest></set>
+
+		<condition var="tmp4">
+			<li value="NIL"></li>
+			<li>
+				<removefromset>
+				<name>tempsabores</name>
+				<key><get var="tmp4"/></key>
+				</removefromset>
+
+				<set var="tmp4"><first><get var="sabores"/></first></set>
+				<set var="sabores"><rest><get var="sabores"/></rest></set>	
+				<loop/>			
+			</li>
+		</condition>
+
+	</template>
+</category>
+
+</topic>
+
+</aiml>

@@ -1,0 +1,232 @@
+--------------------
+Pregunta-Respuesta
+--------------------
+
+<patern> -> definir nueva regla
+<template> -> definir respuesta a patern
+
+--------------------
+Comodines
+--------------------
+
+* -> captura una o mas palabras
+^ -> captura cero o mas palabras
+_ -> es igual a *
+# -> es igual a ^
+
+Si se corresponen dos o mas patrones se elige 
+el de mayor prioridad siguiendo el siguiente orden:
+
+Hola # > Hola _ > Hola amigo > Hola ^ > Hola *
+
+Si se da el caso de que cierto patron requiere mayor
+prioridad que otro se usa $ para dar mayor prioridad
+
+Si tenemos:
+    <pattern>$Quien * Luis</pattern>
+    <pattern>_ Luis </pattern>
+
+Por defecto _ tiene mayor prioridad pero si usamos $
+entonces, * tendrá una mayor prioridad
+
+Para usar un comodin dentro de <template> usaremos la
+etiqueta <star/>. Por ejemplo:
+
+    <category>
+        <pattern>Mi nombre es *</pattern>
+        <template>Hola <star/></template>
+    </category>
+
+La salida sería algo como: 
+    Human: Mi nombre es Rocio
+    Robot: Hola Rocio
+
+Cuando hay más de un comodín se hace uso de <star index=“x”/>,
+dónde x indica la posición que ocupa el comodín desde el principio del
+patrón.
+
+    <category>
+        <pattern>Estudio * en *</pattern>
+        <template>En <star index=“2”/>, yo también estudio<star/></template>
+    </category>
+
+La salida sería algo como:
+    Human: Estudio informatica en Granada
+    Robot: En Granada, yo también estudio informatica
+
+
+
+--------------------
+Variables
+--------------------
+Propiedades del bot : define información del bot
+Variables globales : variable cuyo valor se puede consultar fuera de una regla
+Variable local : variable propia de una regla
+
+Para usar las propiedades del bot se usa la etiqueta <bot name="x"/>
+
+Declaramos variables globales usando <set name=“x”>value</set> donde x
+es el nombre de la variable. AIML no proporciona declaración para variables
+por lo que hay que tener cuidado con el nombre.
+
+Para obtener su valor se usa <get name="x"/>
+
+Una variable que se invoca sin haberle asignado un valor previamente
+devuelve siempre como valor “unknown”
+
+Para crear una variable local usamos <set var="x">value</set> y para 
+obtener su valor <get var=“x”/>. Estas variables se crean en el template.
+
+Tanto el acceso como la asignación de una variable provoca “eco” por
+pantalla. Para evitar ese “eco”, las asignaciones y acceso se
+encierran en un par <think></think>
+
+
+
+--------------------
+Reduccion Simbolica
+--------------------
+Permite resuar reglas usando ciertos patrones en las preguntas que se
+realizan usando la etiqueta <srai>...</srai> de manera que se llame a
+una regla ya establecidad en vez de crear otra nueva.
+
+
+--------------------
+Sets y Maps
+--------------------
+Un set es una lista de cadenas que se expresa sobre un
+fichero. El nombre del fichero da la denominación del set y la
+extensión debe ser “txt”. Este fichero debe estar ubicado en
+la carpeta “sets”.
+
+Los sets permiten hacer una reducción importante en el
+número de reglas. Por ejemplo, si defino un set con la lista de
+colores, con dos únicas reglas puedo determinar si algo es un
+color o no.
+
+    <category>
+        <pattern>Es <set>color</set> un color</pattern>
+        <template>Si, <star/> es un color </template>
+    </category>
+    
+    <category>
+        <pattern> Es * un color</pattern>
+        <template>No, <star/> no es un color</template>
+    </category>
+
+La secuencia <set>color</set> en el patrón, verifica si la
+entrada coincide con alguna de las palabras que aparecen en
+el fichero “color.txt”. Si es así, la regla se dispara. En otro
+caso, será la segunda regla la que se dispare.
+Set tiene mayor prioridad que “*” y “^”, pero menos que “_“y “#”
+
+Maps representa el tipo de dato diccionario y al igual que los
+sets se codifica en un fichero independiente donde el nombre
+del fichero da nombre al maps y la extensión a de ser “txt”.
+Este fichero debe estar alojado en la carpeta maps.
+En cada línea del fichero se codifica una entrada con el
+siguiente formato:
+    cadena1:cadena2
+
+Por ejemplo, la operación <map name=“capital”>KEY</map>
+devuelve el valor asociado a la clave KEY.
+
+
+--------------------
+Contexto
+--------------------
+
+El contexto es fundamental para que una conversación
+mantenga coherencia y tiene que ver con recordar
+cosas que se han dicho previamente.
+En AIML hay 3 elementos para recordar el contexto:
+• Los predicados o variables globales (vistas previamente)
+• El tag <that>
+• Un “set” predefinido en el lenguaje llamado “topic”
+
+<set name=“topic”> / <topic name=“x”></topic>
+Esta variable global predefinida en el lenguaje permite agrupar las reglas de
+manera que estas sólo se activen cuando la conversación se centra en un tema
+concreto.
+Por defecto, el valor de “topic” es “unknown”. Como ha sido nuestro caso, a lo
+largo de todo este tutorial, ya que nunca le fijamos un valor.
+Lo primero es definir un bloque de reglas sobre un tema, para ello se encierran las
+reglas entre un <topic name=”tema”> ... </topic>.
+<topic name=“cafe”>
+<category> ..... </category>
+..........................
+<category> ..... </category>
+</topic>
+Para fijar un tema, en el “template” de alguna regla se usa <set name=”topic”>
+<template> te gusta el <set name=“topic”> cafe </set></template>
+
+
+--------------------
+Random, estructura
+condicional y ciclos
+--------------------
+
+No responder exactamente de la misma forma ante la mismapregunta o ante 
+preguntas similares ayuda al bot a dar la impresión de 
+presentar un comportamiento más semejante al humano.
+El lenguaje AIML tiene el tag <random>, para aportar al
+conocimiento este comportamiento. La sintaxis es la siguiente:
+    <random>
+    <li> .... </li>
+    <li> ... </li>
+    ......
+    <li> ... <li>
+    </random>
+
+Ejemplo
+    <category>
+        <pattern>hola *</pattern>
+        <template>
+        <random>
+            <li> Hola! </li>
+            <li> Buenas! Qué tal? </li>
+        </random>
+        </template>
+    </category>
+Los pares <li>...</li> separan las distintas salidas posible. El
+comportamiento de esta sentencia, es que aleatoriamente elige
+entre uno de los pares <li></li> para ofrecerlo como salida.
+
+En AIML también hay una estructura condicional.
+Esta estructura condicional funciona como el “switch” de C. 
+Su sintáxis es la siguiente:
+
+Para variables locales
+<condition var =“x”>
+<li value=“x1”> .... </li>
+<li value=“x2”> ... </li>
+......
+<li> ... <li>
+</condition>
+
+Para variables globales
+<condition name =“x”>
+<li value=“x1”> .... </li>
+<li value=“x2”> ... </li>
+......
+<li> ... <li>
+</condition>
+
+Los pares <li value></li> separan los distintos casos, y el último
+<li></li> se aplica cuando ninguno de los casos anteriores se
+cumple.
+
+
+--------------------
+Aprender
+--------------------
+
+Una de las particularidades más importante de AIML es que da la
+posibilidad al bot de aprender de los usuarios.
+
+Para eso se usan dos tag <learn> y <learnf>.
+Ambos se usan de la misma manera, y la única diferencia entre
+ambos es si lo que aprende sólo se usa en la conversación actual, en
+ese caso, se usa <learn> o si lo aprendido se desea que se
+mantenga como parte de la base de reglas, en cuyo caso hay que
+usar <learnf>.
